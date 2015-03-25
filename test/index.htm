@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <title>DICOM Viewer</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+     <script src="//code.jquery.com/jquery-2.1.1.js" type="text/javascript"></script>
+     <script src="../dist/jpx.js" type="text/javascript"></script>
+
+     <script type="text/javascript">
+
+function onSumResponse() {
+  if (xhr.readyState != 4)  { return; }
+  if (!(xhr.status === 200 || xhr.status === 206)) {
+    throw Error(xhr.status + " " + xhr.statusText + ": " + parsedId.url);
+  }
+  var jpxData = new Uint8Array(xhr.response);
+  var jpxImage = new JpxImage();
+  debugger;
+  jpxImage.parse(jpxData);
+  var width = jpxImage.width;
+  var height = jpxImage.height;
+  console.log('done' + width)
+}
+var xhr = new XMLHttpRequest();
+xhr.open("GET", './data/navimage.jp2', true);
+xhr.responseType = 'arraybuffer';
+xhr.onreadystatechange = onSumResponse;
+xhr.send();
+     </script>
+</head>
+
+nothing to see..
+<body>
+</body>
+
+</html>
