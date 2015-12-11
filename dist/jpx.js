@@ -1470,22 +1470,31 @@ var JpxImage = (function JpxImageClosure() {
         }
       } else { // no multi-component transform
         for (c = 0; c < componentsCount; c++) {
+          var isSigned = components[c].isSigned;
+          var items = transformedTiles[c].items;
           if (components[c].precision === 8){
-            var items = transformedTiles[c].items;
-            shift = components[c].precision - 8;
-            offset = (128 << shift) + 0.5;
-            max = (127.5 * (1 << shift));
-            min = -max;
-            for (pos = c, j = 0, jj = items.length; j < jj; j++) {
-              val = items[j];
-              out[pos] = val <= min ? 0 :
-                         val >= max ? 255 : (val + offset) >> shift;
-              pos += componentsCount;
+            if(isSigned){
+              for (pos = c, j = 0, jj = items.length; j < jj; j++) {
+                var uint = items[j];
+                if (uint < 0) {
+                  uint += 256;
+                }
+                out[pos] = uint;
+                pos += componentsCount;
+              }
+            }else{
+              shift = components[c].precision - 8;
+              offset = (128 << shift) + 0.5;
+              max = (127.5 * (1 << shift));
+              min = -max;
+              for (pos = c, j = 0, jj = items.length; j < jj; j++) {
+                val = items[j];
+                out[pos] = val <= min ? 0 :
+                           val >= max ? 255 : (val + offset) >> shift;
+                pos += componentsCount;
+              }
             }
           }else{
-            var isSigned = components[c].isSigned;
-            var items = transformedTiles[c].items;
-
             if(isSigned){
               for (pos = c, j = 0, jj = items.length; j < jj; j++) {
                 out[pos] = items[j];
