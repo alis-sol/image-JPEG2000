@@ -385,8 +385,9 @@ var JpxImage = (function JpxImageClosure() {
               // skipping content
               break;
             case 0xFF53: // Coding style component (COC)
-              throw new Error('JPX Error: Codestream code 0xFF53 (COC) is ' +
-                              'not implemented');
+              length = readUint16(data, position);
+              // skipping content
+              break;
             default:
               throw new Error('JPX Error: Unknown codestream code: ' +
                               code.toString(16));
